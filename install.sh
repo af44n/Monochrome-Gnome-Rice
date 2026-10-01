@@ -94,45 +94,52 @@ case "$DISTRO" in
     arch)
         $SUDO pacman -Sy --needed --noconfirm \
             sassc gnome-themes-extra gnome-tweaks gnome-shell-extensions \
-            fish git curl unzip ttf-jetbrains-mono python-pipx
+            fish git curl unzip ttf-jetbrains-mono python-pipx 2>/dev/null || true
 
         if command -v yay &>/dev/null; then
-            yay -S --needed --noconfirm gtk-engine-murrine
+            yay -S --needed --noconfirm gtk-engine-murrine 2>/dev/null || true
         elif command -v paru &>/dev/null; then
-            paru -S --needed --noconfirm gtk-engine-murrine
+            paru -S --needed --noconfirm gtk-engine-murrine 2>/dev/null || true
         else
             warn "gtk-engine-murrine is AUR-only. Install it with: yay -S gtk-engine-murrine"
         fi
 
         $SUDO pacman -R --noconfirm illogical-impulse-bibata-modern-classic-bin 2>/dev/null || true
         if command -v paru &>/dev/null; then
-            paru -S --noconfirm bibata-cursor-theme-bin
+            paru -S --noconfirm bibata-cursor-theme-bin 2>/dev/null || true
         elif command -v yay &>/dev/null; then
-            yay -S --noconfirm bibata-cursor-theme-bin
+            yay -S --noconfirm bibata-cursor-theme-bin 2>/dev/null || true
         fi
         ;;
     debian)
-        $SUDO apt update
+        $SUDO apt update 2>/dev/null || true
         $SUDO apt install -y \
             sassc gtk2-engines-murrine gnome-themes-extra gnome-tweaks \
             gnome-shell-extensions fish git curl unzip fonts-jetbrains-mono \
-            python3-pip pipx
+            python3-pip pipx 2>/dev/null || true
         if $SUDO apt install -y bibata-cursor-theme 2>/dev/null; then
             info "Bibata cursor installed via apt."
         fi
         ;;
     fedora)
-        $SUDO dnf install -y \
-            sassc gtk-murrine-engine gnome-themes-extra gnome-tweaks \
+        $SUDO dnf install -y --skip-unavailable \
+            sassc gtk-murrine-engine gnome-tweaks \
             gnome-shell-extension-user-theme fish git curl unzip jetbrains-mono-fonts \
-            pipx
+            pipx 2>/dev/null \
+            || $SUDO dnf install -y --skip-broken \
+                sassc gtk-murrine-engine gnome-tweaks \
+                gnome-shell-extension-user-theme fish git curl unzip jetbrains-mono-fonts \
+                pipx 2>/dev/null \
+            || true
         $SUDO dnf copr enable -y peterwu/rendezvous 2>/dev/null || true
-        $SUDO dnf install -y bibata-cursor-themes 2>/dev/null || true
+        $SUDO dnf install -y --skip-unavailable bibata-cursor-themes 2>/dev/null \
+            || $SUDO dnf install -y --skip-broken bibata-cursor-themes 2>/dev/null \
+            || true
         ;;
     opensuse)
         $SUDO zypper install -y \
             sassc gtk2-engine-murrine gnome-themes-extra gnome-tweaks \
-            fish git curl unzip jetbrains-mono python3-pipx
+            fish git curl unzip jetbrains-mono python3-pipx 2>/dev/null || true
         ;;
     *)
         warn "Skipping auto-install. Install manually: sassc, gtk-engine-murrine, gnome-themes-extra, gnome-tweaks, gnome-shell-extensions, fish, git, pipx"
