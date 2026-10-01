@@ -254,6 +254,10 @@ declare -A EXTENSIONS=(
     ["space-bar@luchrioh"]="5090"
     ["top-bar-organizer@julian.gse.jsts.xyz"]="4356"
     ["tophat@fflewddur.github.io"]="5219"
+    ["dynamic-music-pill@andbal"]="6734"
+    ["appindicatorsupport@rgcjonas.gmail.com"]="615"
+    ["dynamic_battery@exalm"]="5859"
+    ["battery-status@atareao.es"]="4337"
 )
 
 ENABLED_UUIDS=""
@@ -283,6 +287,13 @@ gsettings set org.gnome.shell enabled-extensions "[$ENABLED_UUIDS]" 2>/dev/null 
     || warn "Could not set enabled-extensions via gsettings."
 
 info "All extensions queued — they will activate after logout/login."
+
+# ── Apply extension dconf configurations ───────────────────────
+if [ -f "$SCRIPT_DIR/config/dconf/extensions.dconf" ] && command -v dconf &>/dev/null; then
+    info "Applying saved extension configurations (Blur my Shell, Space Bar, TopHat, Dash to Dock, Top Bar Organizer, etc.)..."
+    dconf load /org/gnome/shell/extensions/ < "$SCRIPT_DIR/config/dconf/extensions.dconf"
+    info "Extension settings restored successfully."
+fi
 
 # Queue the shell theme (user-theme extension must be active)
 gsettings set org.gnome.shell.extensions.user-theme name "$THEME_NAME" 2>/dev/null || true

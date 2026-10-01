@@ -27,6 +27,7 @@ A clean, minimalist monochromatic setup for the GNOME desktop environment featur
 ```
 Monochrome-Gnome-Rice/
 ├── config/
+│   ├── dconf/            # Exact saved GNOME extensions configuration
 │   ├── gtk-3.0/          # GTK 3 custom styling and assets
 │   └── gtk-4.0/          # GTK 4 / Libadwaita custom styling and assets
 ├── cursors/
