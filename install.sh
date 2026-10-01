@@ -230,14 +230,14 @@ else
     warn "Wallpaper file not found in $SCRIPT_DIR/wallpapers/background.png"
 fi
 
-# ── GNOME extensions ──────────────────────────────────────────
-info "Installing and configuring GNOME extensions..."
+# ── GNOME extensions via gnome-extensions-cli (gext) ─────────
+info "Installing gnome-extensions-cli (gext)..."
 export PATH="$HOME/.local/bin:$PATH"
 
 if ! command -v gext &>/dev/null; then
     pipx install gnome-extensions-cli --system-site-packages 2>/dev/null \
         || pip3 install --user gnome-extensions-cli 2>/dev/null \
-        || true
+        || warn "Could not install gext via pipx or pip. Extensions must be installed manually."
 fi
 
 # Enable user extensions globally
@@ -256,70 +256,29 @@ declare -A EXTENSIONS=(
     ["tophat@fflewddur.github.io"]="5219"
 )
 
-install_extension() {
-    local uuid="$1"
-    local ext_id="$2"
-
-    info "  → Installing: $uuid (ID: $ext_id)"
-
-    # 1. Try gext in filesystem mode (avoids DBus prompt hangs/failures)
-    if command -v gext &>/dev/null; then
-        if gext -F install "$uuid" 2>/dev/null || gext -F install "$ext_id" 2>/dev/null; then
-            command -v gnome-extensions &>/dev/null && gnome-extensions enable "$uuid" 2>/dev/null || true
-            return 0
-        fi
-    fi
-
-    # 2. Direct fallback via extensions.gnome.org API
-    local api_resp
-    api_resp=$(curl -sfL "https://extensions.gnome.org/extension-info/?pk=$ext_id" 2>/dev/null || true)
-    if [ -n "$api_resp" ]; then
-        local download_tag
-        download_tag=$(python3 -c "
-import json
-try:
-    data = json.loads('''$api_resp''')
-    versions = data.get('shell_version_map', {})
-    if versions:
-        print(list(versions.values())[-1].get('pk'))
-except Exception:
-    pass
-" 2>/dev/null || true)
-
-        if [ -n "$download_tag" ]; then
-            local tmp_zip
-            tmp_zip=$(mktemp --suffix=.zip)
-            if curl -sfL "https://extensions.gnome.org/download-extension/${uuid}.shell-extension.zip?version_tag=${download_tag}" -o "$tmp_zip"; then
-                local ext_dest="$HOME/.local/share/gnome-shell/extensions/$uuid"
-                mkdir -p "$ext_dest"
-                unzip -qo "$tmp_zip" -d "$ext_dest" 2>/dev/null || true
-                if [ -d "$ext_dest/schemas" ] && command -v glib-compile-schemas &>/dev/null; then
-                    glib-compile-schemas "$ext_dest/schemas" 2>/dev/null || true
-                fi
-                rm -f "$tmp_zip"
-                command -v gnome-extensions &>/dev/null && gnome-extensions enable "$uuid" 2>/dev/null || true
-                return 0
-            fi
-            rm -f "$tmp_zip"
-        fi
-    fi
-
-    warn "    Could not auto-install $uuid — visit https://extensions.gnome.org/extension/$ext_id/"
-    return 1
-}
-
 ENABLED_UUIDS=""
-for UUID in "${!EXTENSIONS[@]}"; do
-    EXT_ID="${EXTENSIONS[$UUID]}"
-    install_extension "$UUID" "$EXT_ID" || true
-    ENABLED_UUIDS="${ENABLED_UUIDS:+$ENABLED_UUIDS, }'$UUID'"
-done
+
+if command -v gext &>/dev/null; then
+    info "Installing GNOME extensions..."
+    for UUID in "${!EXTENSIONS[@]}"; do
+        EXT_ID="${EXTENSIONS[$UUID]}"
+        info "  → Installing: $UUID (ID: $EXT_ID)"
+        gext -F install "$UUID" 2>/dev/null \
+            || warn "    Could not install $UUID — visit https://extensions.gnome.org/extension/$EXT_ID/"
+        ENABLED_UUIDS="${ENABLED_UUIDS:+$ENABLED_UUIDS, }'$UUID'"
+    done
+else
+    warn "gext not found. Skipping extension install. Install them manually from https://extensions.gnome.org"
+    for UUID in "${!EXTENSIONS[@]}"; do
+        ENABLED_UUIDS="${ENABLED_UUIDS:+$ENABLED_UUIDS, }'$UUID'"
+    done
+fi
 
 # Enable all extensions in one gsettings call
 gsettings set org.gnome.shell enabled-extensions "[$ENABLED_UUIDS]" 2>/dev/null \
     || warn "Could not set enabled-extensions via gsettings."
 
-info "All extensions installed and queued — they will activate after logout/login."
+info "All extensions queued — they will activate after logout/login."
 
 # Queue the shell theme (user-theme extension must be active)
 gsettings set org.gnome.shell.extensions.user-theme name "$THEME_NAME" 2>/dev/null || true
