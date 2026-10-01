@@ -231,14 +231,13 @@ else
 fi
 
 # ── GNOME extensions via gnome-extensions-cli (gext) ─────────
-info "Installing gnome-extensions-cli (gext)..."
+info "Setting up gnome-extensions-cli (gext)..."
 export PATH="$HOME/.local/bin:$PATH"
 
-if ! command -v gext &>/dev/null; then
-    info "Installing gnome-extensions-cli..."
-    pipx install gnome-extensions-cli --system-site-packages 2>&1 \
-        || pip3 install --user gnome-extensions-cli 2>&1 \
-        || warn "Could not install gext via pipx or pip."
+if ! gext --version &>/dev/null; then
+    pipx uninstall gnome-extensions-cli 2>/dev/null || true
+    rm -rf "$HOME/.local/share/pipx/venvs/gnome-extensions-cli" "$HOME/.local/bin/gext" "$HOME/.local/bin/gnome-extensions-cli"
+    pipx install gnome-extensions-cli || pip3 install --user gnome-extensions-cli || warn "Could not install gext via pipx or pip."
 fi
 
 # Enable user extensions globally
