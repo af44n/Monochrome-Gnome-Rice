@@ -4,9 +4,15 @@ A clean, minimalist monochromatic setup for the GNOME desktop environment featur
 
 ---
 
-## 📸 Preview
+## 📸 Previews
 
-![Wallpaper Preview](wallpapers/background.png)
+<p align="center">
+  <img src="previews/desktop.png" alt="Monochrome Desktop Setup" width="100%" />
+</p>
+
+<p align="center">
+  <img src="previews/apps.png" alt="Terminal & Browser Preview" width="100%" />
+</p>
 
 ---
 
@@ -34,6 +40,9 @@ Monochrome-Gnome-Rice/
 │   └── Bibata-Modern-Ice/ # Cursor theme
 ├── icons/
 │   └── YAMIS/             # Full monochromatic icon set
+├── previews/              # Screenshots & showcase
+│   ├── apps.png
+│   └── desktop.png
 ├── themes/
 │   └── dark-bs/           # Dark BS theme files (GTK 2/3/4, Shell, etc.)
 ├── wallpapers/
