@@ -235,9 +235,10 @@ info "Installing gnome-extensions-cli (gext)..."
 export PATH="$HOME/.local/bin:$PATH"
 
 if ! command -v gext &>/dev/null; then
-    pipx install gnome-extensions-cli --system-site-packages 2>/dev/null \
-        || pip3 install --user gnome-extensions-cli 2>/dev/null \
-        || warn "Could not install gext via pipx or pip. Extensions must be installed manually."
+    info "Installing gnome-extensions-cli..."
+    pipx install gnome-extensions-cli --system-site-packages 2>&1 \
+        || pip3 install --user gnome-extensions-cli 2>&1 \
+        || warn "Could not install gext via pipx or pip."
 fi
 
 # Enable user extensions globally
@@ -263,12 +264,16 @@ if command -v gext &>/dev/null; then
     for UUID in "${!EXTENSIONS[@]}"; do
         EXT_ID="${EXTENSIONS[$UUID]}"
         info "  → Installing: $UUID (ID: $EXT_ID)"
-        gext -F install "$UUID" 2>/dev/null \
-            || warn "    Could not install $UUID — visit https://extensions.gnome.org/extension/$EXT_ID/"
+        if err_out=$(gext -F install "$UUID" 2>&1); then
+            [ -n "$err_out" ] && echo "$err_out" | sed 's/^/      /'
+        else
+            warn "    Failed to install $UUID (ID: $EXT_ID):"
+            echo -e "${YELLOW}$err_out${NC}" | sed 's/^/      /'
+        fi
         ENABLED_UUIDS="${ENABLED_UUIDS:+$ENABLED_UUIDS, }'$UUID'"
     done
 else
-    warn "gext not found. Skipping extension install. Install them manually from https://extensions.gnome.org"
+    warn "gext not found in PATH ($PATH). Skipping extension install."
     for UUID in "${!EXTENSIONS[@]}"; do
         ENABLED_UUIDS="${ENABLED_UUIDS:+$ENABLED_UUIDS, }'$UUID'"
     done
