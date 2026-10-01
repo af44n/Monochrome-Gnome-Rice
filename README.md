@@ -48,7 +48,7 @@ Monochrome-Gnome-Rice/
 Clone the repository and run the setup script:
 
 ```bash
-git clone https://github.com/trulynotafan/Monochrome-Gnome-Rice.git
+git clone https://github.com/af44n/Monochrome-Gnome-Rice.git
 cd Monochrome-Gnome-Rice
 chmod +x install.sh
 ./install.sh
