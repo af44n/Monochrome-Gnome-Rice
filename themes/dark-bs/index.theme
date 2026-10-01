@@ -1,0 +1,12 @@
+Type=X-GNOME-Metatheme
+[Desktop Entry]
+Name=Monochromatic Theme
+Comment=A high-contrast black and white theme
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Monochromatic Theme
+MetacityTheme=Monochromatic Theme
+IconTheme=Tela-circle-Dark
+CursorTheme=Gruvbox-cursors
+ButtonLayout=close,minimize,maximize:menu
