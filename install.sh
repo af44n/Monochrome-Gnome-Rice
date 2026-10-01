@@ -153,8 +153,9 @@ info "Installing Dark BS theme..."
 THEME_NAME="dark-bs"
 
 if [ -d "$SCRIPT_DIR/themes/$THEME_NAME" ]; then
-    cp -r "$SCRIPT_DIR/themes/$THEME_NAME" "$HOME/.themes/"
-    cp -r "$SCRIPT_DIR/themes/$THEME_NAME" "$HOME/.local/share/themes/" 2>/dev/null || true
+    rm -rf "$HOME/.themes/$THEME_NAME" "$HOME/.local/share/themes/$THEME_NAME"
+    cp -rf "$SCRIPT_DIR/themes/$THEME_NAME" "$HOME/.themes/"
+    cp -rf "$SCRIPT_DIR/themes/$THEME_NAME" "$HOME/.local/share/themes/" 2>/dev/null || true
     info "Dark BS theme copied to ~/.themes and ~/.local/share/themes"
 else
     warn "Theme directory not found in repository ($SCRIPT_DIR/themes/$THEME_NAME)"
@@ -163,11 +164,13 @@ fi
 # ── GTK 3 & GTK 4 / Libadwaita overrides ──────────────────────
 info "Applying GTK 3.0 and GTK 4.0 configuration..."
 if [ -d "$SCRIPT_DIR/config/gtk-3.0" ]; then
-    cp -r "$SCRIPT_DIR/config/gtk-3.0/"* "$HOME/.config/gtk-3.0/"
+    rm -rf "$HOME/.config/gtk-3.0/assets" "$HOME/.config/gtk-3.0/gtk.css" "$HOME/.config/gtk-3.0/gtk-dark.css" "$HOME/.config/gtk-3.0/thumbnail.png"
+    cp -rf "$SCRIPT_DIR/config/gtk-3.0/"* "$HOME/.config/gtk-3.0/"
 fi
 
 if [ -d "$SCRIPT_DIR/config/gtk-4.0" ]; then
-    cp -r "$SCRIPT_DIR/config/gtk-4.0/"* "$HOME/.config/gtk-4.0/"
+    rm -rf "$HOME/.config/gtk-4.0/assets" "$HOME/.config/gtk-4.0/gtk.css" "$HOME/.config/gtk-4.0/gtk-dark.css" "$HOME/.config/gtk-4.0/thumbnail.png"
+    cp -rf "$SCRIPT_DIR/config/gtk-4.0/"* "$HOME/.config/gtk-4.0/"
 fi
 
 # Apply dark-mode preferences and GTK theme via gsettings
@@ -180,8 +183,9 @@ info "Installing YAMIS icon theme..."
 ICON_THEME="YAMIS"
 
 if [ -d "$SCRIPT_DIR/icons/$ICON_THEME" ]; then
-    cp -r "$SCRIPT_DIR/icons/$ICON_THEME" "$HOME/.icons/"
-    cp -r "$SCRIPT_DIR/icons/$ICON_THEME" "$HOME/.local/share/icons/"
+    rm -rf "$HOME/.icons/$ICON_THEME" "$HOME/.local/share/icons/$ICON_THEME"
+    cp -rf "$SCRIPT_DIR/icons/$ICON_THEME" "$HOME/.icons/"
+    cp -rf "$SCRIPT_DIR/icons/$ICON_THEME" "$HOME/.local/share/icons/"
     info "YAMIS icons copied to ~/.icons and ~/.local/share/icons"
 else
     warn "Icon directory not found in repository ($SCRIPT_DIR/icons/$ICON_THEME)"
@@ -194,8 +198,9 @@ info "Installing Bibata Modern Ice cursor..."
 CURSOR_NAME="Bibata-Modern-Ice"
 
 if [ -d "$SCRIPT_DIR/cursors/$CURSOR_NAME" ]; then
-    cp -r "$SCRIPT_DIR/cursors/$CURSOR_NAME" "$HOME/.icons/"
-    cp -r "$SCRIPT_DIR/cursors/$CURSOR_NAME" "$HOME/.local/share/icons/"
+    rm -rf "$HOME/.icons/$CURSOR_NAME" "$HOME/.local/share/icons/$CURSOR_NAME"
+    cp -rf "$SCRIPT_DIR/cursors/$CURSOR_NAME" "$HOME/.icons/"
+    cp -rf "$SCRIPT_DIR/cursors/$CURSOR_NAME" "$HOME/.local/share/icons/"
     info "Bibata-Modern-Ice cursor copied from repository."
 elif [ ! -d "$HOME/.icons/$CURSOR_NAME" ] && [ ! -d "/usr/share/icons/$CURSOR_NAME" ]; then
     install_bibata_from_github || true
