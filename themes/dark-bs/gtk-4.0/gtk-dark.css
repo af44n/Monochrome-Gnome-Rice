@@ -3360,6 +3360,11 @@ switch:checked {
   background-color: #FFFFFF;
 }
 
+switch:checked > slider,
+switch:checked slider {
+  background-color: #000000;
+}
+
 switch:disabled {
   opacity: 0.5;
 }
@@ -5514,12 +5519,12 @@ flowbox > flowboxchild:selected, calendar > grid > label.today {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-textview text selection:focus, textview text selection, label > selection,
-entry > text > selection, spinbutton > text > selection,
+selection, textview text selection:focus, textview text selection, label > selection, label selection,
+entry > text > selection, entry selection, spinbutton > text > selection,
 entry headerbar popover.background entry > text > selection,
 headerbar popover.background entry entry > text > selection, calendar > grid > label.today:selected {
-  color: rgba(0, 0, 0, 0.87);
-  background-color: #FFFFFF;
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 /**********************
@@ -8329,9 +8334,9 @@ themeswitcher checkbutton.dark {
 /* text widgets and the like base background color */
 @define-color theme_base_color #000000;
 /* base background color of selections */
-@define-color theme_selected_bg_color #FFFFFF;
+@define-color theme_selected_bg_color #404040;
 /* text/foreground color of selections */
-@define-color theme_selected_fg_color rgba(0, 0, 0, 0.87);
+@define-color theme_selected_fg_color #FFFFFF;
 /* base background color of insensitive widgets */
 @define-color insensitive_bg_color #000000;
 /* text foreground color of insensitive widgets */
@@ -8347,9 +8352,9 @@ themeswitcher checkbutton.dark {
 /* text widgets and the like base background color on backdrop windows */
 @define-color theme_unfocused_base_color #000000;
 /* base background color of selections on backdrop windows */
-@define-color theme_unfocused_selected_bg_color #FFFFFF;
+@define-color theme_unfocused_selected_bg_color #2a2a2a;
 /* text/foreground color of selections on backdrop windows */
-@define-color theme_unfocused_selected_fg_color rgba(0, 0, 0, 0.87);
+@define-color theme_unfocused_selected_fg_color #FFFFFF;
 /* insensitive color on backdrop windows */
 @define-color unfocused_insensitive_color rgba(255, 255, 255, 0.5);
 /* widgets main borders color */

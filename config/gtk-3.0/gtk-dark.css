@@ -51,8 +51,8 @@
 
 .nemo-window .nemo-window-pane widget.entry:selected, window.background.csd evview.view.content-view:selected, window.background.csd evview.view.content-view:selected:backdrop, .nautilus-window.background.csd notebook widget.view:selected, spinbutton.vertical selection, spinbutton:not(.vertical) selection,
 entry selection, textview text selection:focus, textview text selection, widget.view:selected, .view:selected {
-  color: rgba(0, 0, 0, 0.87);
-  background-color: #FFFFFF;
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 treeview.view:selected {
@@ -2360,6 +2360,10 @@ switch {
 
 switch:checked {
   background-color: #FFFFFF;
+}
+
+switch:checked slider {
+  background-color: #000000;
 }
 
 switch:disabled {
@@ -8525,9 +8529,9 @@ menubar.-vala-panel-background > menuitem:disabled {
 /* text widgets and the like base background color */
 @define-color theme_base_color #000000;
 /* base background color of selections */
-@define-color theme_selected_bg_color #FFFFFF;
+@define-color theme_selected_bg_color #404040;
 /* text/foreground color of selections */
-@define-color theme_selected_fg_color rgba(0, 0, 0, 0.87);
+@define-color theme_selected_fg_color #FFFFFF;
 /* base background color of insensitive widgets */
 @define-color insensitive_bg_color #000000;
 /* text foreground color of insensitive widgets */
@@ -8543,9 +8547,9 @@ menubar.-vala-panel-background > menuitem:disabled {
 /* text widgets and the like base background color on backdrop windows */
 @define-color theme_unfocused_base_color #000000;
 /* base background color of selections on backdrop windows */
-@define-color theme_unfocused_selected_bg_color #FFFFFF;
+@define-color theme_unfocused_selected_bg_color #2a2a2a;
 /* text/foreground color of selections on backdrop windows */
-@define-color theme_unfocused_selected_fg_color rgba(0, 0, 0, 0.87);
+@define-color theme_unfocused_selected_fg_color #FFFFFF;
 /* insensitive color on backdrop windows */
 @define-color unfocused_insensitive_color rgba(255, 255, 255, 0.5);
 /* widgets main borders color */
